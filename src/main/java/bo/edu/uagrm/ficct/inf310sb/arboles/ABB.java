@@ -894,32 +894,6 @@ public class ABB<K extends Comparable<K>, V> implements IArbolBusqueda<K, V> {
         return -1;
     }
 
-    //ESTUDIACION
-    //Implemente un método que retorne la cantidad nodos que
-    // tienen solo hijo izquierdo no vacío en un árbol binario
-
-    //ITERATIVO
-    public int cantHijosIzq() {
-        int i = 0;
-        if(this.esArbolVacio()) {
-            return 0;
-        }
-        Queue<NodoBinario<K, V>> colaDeNodos = new LinkedList<>();
-        colaDeNodos.offer(this.raiz);
-        while(!colaDeNodos.isEmpty()) {
-            NodoBinario<K, V> nodoActual = colaDeNodos.poll();
-            if(!nodoActual.esVacioHijoIzquierdo() && nodoActual.esVacioHijoDerecho()) {
-                i++;
-            }
-            if(!nodoActual.esVacioHijoIzquierdo()) {
-                colaDeNodos.offer(nodoActual.getHijoIzquierdo());
-            }
-            if(!nodoActual.esVacioHijoDerecho()) {
-                colaDeNodos.offer(nodoActual.getHijoDerecho());
-            }
-        }
-        return i;
-    }
 
     public String arbolGrafico() {
         return arbolGrafico(raiz, 0, true);
@@ -940,53 +914,6 @@ public class ABB<K extends Comparable<K>, V> implements IArbolBusqueda<K, V> {
         return ret;
     }
 
-    //Implemente un método iterativo que retorne la cantidad nodos que
-    // tienen solo hijo izquierdo no vacío en un árbol binario
-
-    //Implemente un método recursivo que retorne la cantidad nodos que tienen solo hijo
-    // izquierdo no vacío en un árbol binario, pero solo en el nivel N
-
-    //Implemente un método iterativo que retorne la cantidad nodos que tienen solo hijo
-    // izquierdo no vacío en un árbol binario, pero solo después del nivel N
-
-    //Implemente un método iterativo que retorne la cantidad nodos que tienen solo hijo
-    // izquierdo no vacío en un árbol binario, pero solo antes del nivel N
-
-    //Implemente un método iterativo que retorne la cantidad de
-    // nodos que tienen ambos hijos distintos de vacío en un árbol binario
-
-    //Implemente un método recursivo que retorne la cantidad de
-    // nodos que tienen ambos hijos distintos de vacío en un árbol binario
-
-    //Implemente un método iterativo que retorne la cantidad de nodos que tienen ambos
-    // hijos distintos de vacío en un árbol binario, pero solo en el nivel N
-
-    //Implemente un método recursivo que retorne la cantidad de nodos que tienen ambos
-    // hijos distintos de vacío en un árbol binario, pero solo en el nivel N
-
-    //Implemente un método iterativo con la lógica de un recorrido en
-    // inOrden que retorne el número de nodos que tiene un árbol binario.
-
-    //Implemente un método recursivo que reciba como parámetro otro árbol binario de búsqueda que
-    // retorne verdadero, si el árbol binario es similar al árbol binario
-    // recibido como parámetro, falso en caso contrario.
-
-    //Para un árbol binario implemente un método que retorne la cantidad de
-    // nodos que tienen ambos hijos desde el nivel N.
-
-    //Implementar un método que retorne un nuevo árbol binario de búsqueda invertido.
-
-    //Implementar un método que retorne verdadero si un árbol binario esta lleno.
-
-    //Implemente un método privado que reciba un nodo binario de un árbol de un
-    //árbol binario y que retorne cual sería su sucesor inorden de la clave de dicho nodo
-
-    //Implemente un método privado que reciba un nodo binario de un árbol de un
-    //árbol binario y que retorne cual sería su predecesor inorden de la clave de dicho nodo
-
-    //Implemente un método que retorne la menor llave en un árbol binario de búsqueda
-
-    //Implemente un método que retorne la mayor llave en un árbol binario de búsqueda
 
 
 }
