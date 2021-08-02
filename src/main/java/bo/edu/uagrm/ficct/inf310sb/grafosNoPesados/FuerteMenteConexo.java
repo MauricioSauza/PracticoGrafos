@@ -1,16 +1,17 @@
 package bo.edu.uagrm.ficct.inf310sb.grafosNoPesados;
 
-import java.util.List;
+public class FuerteMenteConexo {
 
-public class ConexoDirigido {
-  private ConexoNoDirigido grafoConexo;
   private boolean esFuerteMenteConexo;
 
-  public ConexoDirigido(DiGrafo unDigrafo) {
+  public FuerteMenteConexo (DiGrafo unDigrafo) {
     esFuerteMenteConexo = true;
-    for (int i = 0; i < unDigrafo.listaDeAdyacencia.size(); i++) {
+    for (int i = 0; i < unDigrafo.cantidadDeVertices(); i++) {
       DFS dfs = new DFS(unDigrafo, i);
       esFuerteMenteConexo = dfs.hayCaminoATodos();
+      if(!esFuerteMenteConexo) {
+        break;
+      }
     }
   }
 

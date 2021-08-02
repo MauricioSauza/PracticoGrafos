@@ -1,4 +1,4 @@
-package bo.edu.uagrm.ficct.inf310sb;
+package bo.edu.uagrm.ficct.inf310sb.arboles;
 
 import java.util.LinkedList;
 import java.util.List;

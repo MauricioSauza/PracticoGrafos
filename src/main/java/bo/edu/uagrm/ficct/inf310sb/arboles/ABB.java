@@ -1,4 +1,4 @@
-package bo.edu.uagrm.ficct.inf310sb;
+package bo.edu.uagrm.ficct.inf310sb.arboles;
 
 import java.util.*;
 
@@ -177,7 +177,7 @@ public class ABB<K extends Comparable<K>, V> implements IArbolBusqueda<K, V> {
 
     public V buscarRec (NodoBinario<K, V> nodoActual, K clave) {
         if (NodoBinario.esNodoVacio(nodoActual)) {
-            return (V)NodoMVias.datoVacio();
+            return (V) NodoMVias.datoVacio();
         }
         K claveActual = nodoActual.getClave();
         V valorActual = nodoActual.getValor();

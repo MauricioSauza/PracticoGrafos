@@ -1,4 +1,4 @@
-package bo.edu.uagrm.ficct.inf310sb.grafosPesados;
+package bo.edu.uagrm.ficct.inf310sb.grafosNoPesados;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.List;
 public class UtilsRecorridos {
     protected List<Boolean> marcados;
 
-    public UtilsRecorridos (int numVertices) {
+    public UtilsRecorridos(int numVertices) {
         marcados = new ArrayList<>();
         for(int i = 0; i < numVertices; i++) {
             marcados.add(Boolean.FALSE);

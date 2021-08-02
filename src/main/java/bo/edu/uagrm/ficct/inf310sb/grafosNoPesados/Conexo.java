@@ -1,26 +1,18 @@
 package bo.edu.uagrm.ficct.inf310sb.grafosNoPesados;
 
-public class ConexoNoDirigido {
+public class Conexo {
 
     DFS grafoDFS;
 
-    public ConexoNoDirigido (Grafo unGrafo) {
+    public Conexo (Grafo unGrafo) {
         grafoDFS = new DFS(unGrafo,0);
     }
 
-    public ConexoNoDirigido (Grafo unGrafo, int posVertice) {
+    public Conexo (Grafo unGrafo, int posVertice) {
         grafoDFS = new DFS(unGrafo, posVertice);
     }
 
-    public ConexoNoDirigido (DiGrafo unDiGrafo) {
-        grafoDFS = new DFS(unDiGrafo,0);
-    }
-
-    public ConexoNoDirigido (DiGrafo unDiGrafo, int posVertice) {
-        grafoDFS = new DFS(unDiGrafo, posVertice);
-    }
-
-    public boolean esConexo() {
+    public boolean esConexo (Grafo grafo) {
         return grafoDFS.hayCaminoATodos();
     }
 

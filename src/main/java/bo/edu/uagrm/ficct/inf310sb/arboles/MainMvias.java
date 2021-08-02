@@ -1,4 +1,4 @@
-package bo.edu.uagrm.ficct.inf310sb;
+package bo.edu.uagrm.ficct.inf310sb.arboles;
 
 public class MainMvias {
     public static void main (String[] args) {

@@ -1,30 +1,18 @@
-package bo.edu.uagrm.ficct.inf310sb.grafosNoPesados;
+package bo.edu.uagrm.ficct.inf310sb.grafosPesados;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 
-/*
-- Clase matriz de caminos X
-- Clase algoritmo de warshall X
--¿Si un grafo es conexo? X
-    - Hacer un recorrido X
-    - Luego de realizar el recorrido evaluar si todos los vertices están marcados para saber si es conexo o no X
--Si un grafo no es conexo ¿cuantas islas tiene?
--¿Si un Digrafo es debilmente conexo? X
--¿Si un Digrafo es fuertemente conexo? X
--¿Si hay un ciclo en un grafo?
--¿Si hay un ciclo en un Digrafo?
--Clase ordenamiento topológico
-- Con base en un recorrido, que podemos agregarle para saber el camino a seguir desde un vertice de partida hasta
-  otro vertice que quedo marcado al realizar el recorrido.
- */
-public class Grafo {
-    protected List<List<Integer>> listaDeAdyacencia;
-    public Grafo() {
+public class GrafoPesado {
+    protected List<List<AdyacentesConPeso>> listaDeAdyacencia;
+    public GrafoPesado () {
         this.listaDeAdyacencia = new ArrayList<>();
     }
 
-    public Grafo(int nroInicialDeVertices) {
+    public GrafoPesado (int nroInicialDeVertices) {
         if(nroInicialDeVertices <= 0) {
             throw new RuntimeException("Nro de vertices no valido");
         }
@@ -36,7 +24,7 @@ public class Grafo {
 
 
     public void insertarVertice() {
-        List<Integer> adyacentesDeNuevoVertice = new ArrayList<>();
+        List<AdyacentesConPeso> adyacentesDeNuevoVertice = new ArrayList<>();
         this.listaDeAdyacencia.add(adyacentesDeNuevoVertice);
     }
 
@@ -46,7 +34,7 @@ public class Grafo {
 
     public int gradoDelVertice(int posDeVertice) {
         validarVertice(posDeVertice);
-        List<Integer> adyacenteDelVertice = this.listaDeAdyacencia.get(posDeVertice);
+        List<AdyacentesConPeso> adyacenteDelVertice = this.listaDeAdyacencia.get(posDeVertice);
         return adyacenteDelVertice.size();
 
     }
@@ -57,16 +45,18 @@ public class Grafo {
         }
     }
 
-    public void insertarArista(int posVerticeOrigen, int posVerticeDestino) {
+    public void insertarArista(int posVerticeOrigen, int posVerticeDestino, double peso) {
         if(this.existeAdyacencia(posVerticeOrigen, posVerticeDestino)) {
             throw new RuntimeException("La lista ya existe");
         }
-        List<Integer> adyacenciaDelOrigen = this.listaDeAdyacencia.get(posVerticeOrigen);
-        adyacenciaDelOrigen.add(posVerticeDestino);
+        List<AdyacentesConPeso> adyacenciaDelOrigen = this.listaDeAdyacencia.get(posVerticeOrigen);
+        AdyacentesConPeso adyacenciaAlOrigen = new AdyacentesConPeso(posVerticeDestino, peso);
+        adyacenciaDelOrigen.add(adyacenciaAlOrigen);
         Collections.sort(adyacenciaDelOrigen);
         if(posVerticeOrigen != posVerticeDestino) {
-            List<Integer> adyacenciaDelDestino = this.listaDeAdyacencia.get(posVerticeDestino);
-            adyacenciaDelDestino.add(posVerticeOrigen);
+            List<AdyacentesConPeso> adyacenciaDelDestino = this.listaDeAdyacencia.get(posVerticeDestino);
+            AdyacentesConPeso adyacenciaAlDestino = new AdyacentesConPeso(posVerticeOrigen, peso);
+            adyacenciaDelDestino.add(adyacenciaAlDestino);
             Collections.sort(adyacenciaDelDestino);
         }
     }
@@ -74,14 +64,19 @@ public class Grafo {
     public boolean existeAdyacencia(int posVerticeOrigen, int posVerticeDestino) {
         validarVertice(posVerticeOrigen);
         validarVertice(posVerticeDestino);
-        List<Integer> adyacenciaDelOrigen = this.listaDeAdyacencia.get(posVerticeOrigen);
-        return adyacenciaDelOrigen.contains(posVerticeDestino);
+        List<AdyacentesConPeso> adyacenciaDelOrigen = this.listaDeAdyacencia.get(posVerticeOrigen);
+        AdyacentesConPeso adyacenciaAlOrigen = new AdyacentesConPeso(posVerticeDestino);
+        return adyacenciaDelOrigen.contains(adyacenciaAlOrigen);
     }
 
     public Iterable<Integer> adyancentesDeVertice(int posDeVertice) {
         validarVertice(posDeVertice);
-        List<Integer> adyaventeDelVertice = this.listaDeAdyacencia.get(posDeVertice);
-        Iterable<Integer> iterableDeAdyacentes = adyaventeDelVertice;
+        List<AdyacentesConPeso> adyaventeDelVertice = this.listaDeAdyacencia.get(posDeVertice);
+        List<Integer> soloVertices = new ArrayList<>();
+        for(AdyacentesConPeso adyacenteConPeso : adyaventeDelVertice) {
+            soloVertices.add(adyacenteConPeso.getIndiceVertice());
+        }
+        Iterable<Integer> iterableDeAdyacentes = soloVertices;
         return iterableDeAdyacentes;
     }
 
@@ -89,9 +84,9 @@ public class Grafo {
         int cantAristas = 0;
         int cantLazos = 0;
         for (int i = 0; i < this.listaDeAdyacencia.size(); i++) {
-            List<Integer> adyacentesDeUnVertice = this.listaDeAdyacencia.get(i);
-            for(Integer posDeAdyacente : adyacentesDeUnVertice) {
-                if(i == posDeAdyacente) {
+            List<AdyacentesConPeso> adyacentesDeUnVertice = this.listaDeAdyacencia.get(i);
+            for(AdyacentesConPeso posDeAdyacente : adyacentesDeUnVertice) {
+                if(i == posDeAdyacente.getIndiceVertice()) {
                     cantLazos++;
                 } else {
                     cantAristas++;
@@ -106,50 +101,50 @@ public class Grafo {
         if(!this.existeAdyacencia(posVerticeOrigen, posVerticeDestino)) {
             throw new IllegalArgumentException("La arista ya existe");
         }
-        List<Integer> adyacenteDelOrigen = this.listaDeAdyacencia.get(posVerticeOrigen);
-        int posicionDelDestino = adyacenteDelOrigen.indexOf(posVerticeDestino);
+        List<AdyacentesConPeso> adyacenteDelOrigen = this.listaDeAdyacencia.get(posVerticeOrigen);
+        AdyacentesConPeso adyacenciaAlOrigen = new AdyacentesConPeso(posVerticeDestino, 0);
+        int posicionDelDestino = adyacenteDelOrigen.indexOf(adyacenciaAlOrigen);
         adyacenteDelOrigen.remove(posicionDelDestino);
         if(posVerticeOrigen != posVerticeDestino) {
-            List<Integer> adyacentesDelDestino = this.listaDeAdyacencia.get(posicionDelDestino);
-            int posicionDelOrigen = adyacenteDelOrigen.indexOf(posVerticeOrigen);
+            List<AdyacentesConPeso> adyacentesDelDestino = this.listaDeAdyacencia.get(posicionDelDestino);
+            AdyacentesConPeso adyacenciaAlDestino = new AdyacentesConPeso(posVerticeOrigen, 0);
+            int posicionDelOrigen = adyacentesDelDestino.indexOf(posVerticeOrigen);
             adyacentesDelDestino.remove(posicionDelOrigen);
         }
     }
+    //Modificar el eliminar
 
     public void eliminarVertice(int posDeVertice) {
         validarVertice(posDeVertice);
         listaDeAdyacencia.remove(posDeVertice);
         for (int i = 0; i < listaDeAdyacencia.size(); i++) {
-            List<Integer> adyacencias = listaDeAdyacencia.get(i);
+            List<AdyacentesConPeso> adyacencias = listaDeAdyacencia.get(i);
             for(int j = 0; j < adyacencias.size(); j++) {
-                int pos = adyacencias.indexOf(posDeVertice);
-                if(pos >= 0) {
+                AdyacentesConPeso pos = adyacencias.get(posDeVertice);
+                if(pos.getIndiceVertice() >= 0) {
                     adyacencias.remove(pos);
-                } else if (pos > posDeVertice) {
-                    int p = adyacencias.get(j);
-                    adyacencias.set(j, p - 1);
+                } else if (pos.getIndiceVertice() > posDeVertice) {
+                    AdyacentesConPeso p = adyacencias.get(j);
+                    p.setIndiceVertice(p.getIndiceVertice() - 1);
+                    adyacencias.set(j, p);
                 }
             }
         }
     }
 
-    public void eliminarVertice2(int posVerticeAEliminar){
-        validarVertice(posVerticeAEliminar);
-        this.listaDeAdyacencia.remove(posVerticeAEliminar);
-        for (List<Integer> adyacentesDeUnVertice: this.listaDeAdyacencia) {
-            int posicionDeVerticeEnAdy = adyacentesDeUnVertice.indexOf(posVerticeAEliminar);
-            if (posicionDeVerticeEnAdy >= 0) {
-                adyacentesDeUnVertice.remove(posicionDeVerticeEnAdy);
-            }
-            for (int i = 0; i < adyacentesDeUnVertice.size(); i++){
-                int posicionAdyacente = adyacentesDeUnVertice.get(i);
-                if (posicionAdyacente > posVerticeAEliminar){
-                    adyacentesDeUnVertice.set(i,posicionAdyacente - 1);
-                }
-            }
-        }
-    }
 
+    public double peso (int posVerticeOrigen, int posVerticeDestino) {
+        validarVertice(posVerticeOrigen);
+        validarVertice(posVerticeDestino);
+        if(!this.existeAdyacencia(posVerticeOrigen,posVerticeDestino)) {
+            throw new RuntimeException("La arista ya existe");
+        }
+        List<AdyacentesConPeso> adyacenteDelOrigen = this.listaDeAdyacencia.get(posVerticeOrigen);
+        AdyacentesConPeso adyacenciaAlOrigen = new AdyacentesConPeso(posVerticeDestino);
+        int posicionDeLaAdyacencia = adyacenteDelOrigen.indexOf(adyacenciaAlOrigen);
+        return adyacenteDelOrigen.get(posicionDeLaAdyacencia).getPeso();
+    }
+/*
     private void llenarCeros(int m[][]) {
         for(int i = 0; i < m.length; i++) {
             for(int j = 0; j < m.length; j++) {
@@ -162,7 +157,7 @@ public class Grafo {
         int m[][] = new int[this.listaDeAdyacencia.size()][this.listaDeAdyacencia.size()];
         llenarCeros(m);
         for(int i = 0; i < this.listaDeAdyacencia.size(); i++) {
-            List<Integer> listaAdyacente = this.listaDeAdyacencia.get(i);
+            List<AdyacentesConPeso> listaAdyacente = this.listaDeAdyacencia.get(i);
             for(int k = 0; k < listaAdyacente.size(); k++) {
                 int pos = listaAdyacente.get(k);
                 for(int j = 0; j < this.listaDeAdyacencia.size(); j++) {
@@ -185,23 +180,25 @@ public class Grafo {
         }
         return matriz;
     }
-
+*/
     @Override
     public String toString() {
-        String s = "";
-        for (int i = 0; i < listaDeAdyacencia.size(); i++) {
-            List<Integer> listaDeAdyacentes = listaDeAdyacencia.get(i);
-            s = s + i + "  [ " + listaDeAdyacencia.get(i) + " ]-->[ ";
-            for (int j = 0; j < listaDeAdyacentes.size(); j++) {
-                if (j == listaDeAdyacentes.size() - 1) {
-                    s = s + "" + listaDeAdyacentes.get(j);
+        String grafo = "";
+        for ( int i = 0; i < listaDeAdyacencia.size(); i++ ) {
+            List<AdyacentesConPeso> adyacentes = listaDeAdyacencia.get(i);
+            grafo = grafo + i + " : " + "[";
+            for ( int j = 0; j < adyacentes.size(); j++ ) {
+                AdyacentesConPeso componente = adyacentes.get(j);
+                if (j == adyacentes.size() - 1) {
+                    grafo = grafo + "[" + componente.getIndiceVertice() + "|" + (int)componente.getPeso() + "]";
                 } else {
-                    s = s + "" + listaDeAdyacentes.get(j) + " , ";
+                    grafo = grafo + "[" + componente.getIndiceVertice() + "|" + (int)componente.getPeso() + "]" + "-->";
                 }
+
             }
-            s = s + " ]" + '\n';
+            grafo = grafo + "]" + "\n";
         }
-        return s;
+        return grafo;
     }
 
 

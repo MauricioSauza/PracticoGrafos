@@ -1,4 +1,4 @@
-package bo.edu.uagrm.ficct.inf310sb;
+package bo.edu.uagrm.ficct.inf310sb.arboles;
 
 public class AVL <K extends Comparable<K>, V> extends ABB<K, V> {
     private static final byte DIFERENCIA_PERMITIDA = 1;
